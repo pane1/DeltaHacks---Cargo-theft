@@ -1,0 +1,60 @@
+static int bluetoothStatus = -1;
+BluetoothAdapter Adapter;
+TextView Status;
+TextView Fail;
+TextView Exception;
+Button check;
+@Override
+
+protected void onCreate(Bundle savedInstanceState) {
+
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+
+    Status = findViewById(R.id.statusBluetooth);
+    Adapter = BluetoothAdapter.getDefaultAdapter();
+    Fail = findViewById(R.id.failAlert);
+    Exception = findViewById(R.id.TurnOnRequest);
+    check = findViewById(R.id.check);
+
+    ConnectivityManager conn = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
+    check.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            boolean wifi = false;
+
+            int connectStats = WifiManager.WIFI_STATE_ENABLED;
+
+            ConnectivityManager conn = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = conn.getActiveNetworkInfo();
+
+            if(connectStats==WifiManager.WIFI_STATE_ENABLED) {
+                wifi = info.getType() == ConnectivityManager.TYPE_WIFI;
+                if (!wifi) {
+                    Status.setText(null);
+                    Exception.setText(null);
+                    Fail.setText("The package is stolen, please report!");
+                    Toast.makeText(MainActivity.this, "Message Send",
+                            Toast.LENGTH_SHORT).show();
+
+                    String messagephone = ""; //insert the number between the quotations
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", messagephone, null));
+                    startActivity(intent);
+
+                } else {
+                    Fail.setText(null);
+                    Status.setText("The package is safely in transportation");
+
+                }
+            }
+
+
+
+        }
+
+
+    });
+
+}
